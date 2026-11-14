@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DSS – University Specialization Selection</title>
+<style>
+:root{--bg:#f2f5f6;--card:#fff;--ink:#14232e;--mute:#5d6f7b;--line:#d5dde2;--acc:#0f766e;--acc2:#b45309;--bad:#b91c1c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+header{background:var(--ink);color:#fff;padding:18px 24px}
+header h1{margin:0;font:600 20px Georgia,serif}
+header p{margin:2px 0 0;color:#9fb3bf;font-size:13px}
+nav{display:flex;gap:4px;padding:0 16px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:0;z-index:5}
+nav button{background:none;border:0;padding:13px 16px;font:inherit;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button.on{color:var(--acc);border-color:var(--acc);font-weight:600}
+main{max-width:1000px;margin:20px auto;padding:0 16px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px;margin-bottom:16px}
+h2{font:600 18px Georgia,serif;margin:0 0 12px}
+h3{font:600 15px "Segoe UI",sans-serif;margin:14px 0 6px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-size:13px;color:var(--mute);font-weight:600}
+.wrap{overflow-x:auto}
+input,select{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+input[type=number]{width:80px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.btn{background:var(--acc);color:#fff;border:0;padding:8px 14px;border-radius:4px;cursor:pointer;font:inherit}
+.btn.sec{background:#e4ebee;color:var(--ink)}
+.btn.del{background:none;color:var(--bad);padding:4px 8px}
+.btn.edit{background:none;color:var(--acc);padding:4px 8px}
+.note{font-size:13px;color:var(--mute)}
+.warn{color:var(--bad);font-weight:600}
+.bar{height:22px;background:#e4ebee;border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc)}
+.bar.first i{background:var(--acc2)}
+.tie{background:#fef3c7;border:1px solid #f59e0b;padding:8px 12px;border-radius:4px;margin-bottom:12px}
+.min{color:var(--acc2);font-size:12px}
+.hero{border-left:8px solid var(--acc2);background:#fffaf0;padding:22px;border-radius:6px;margin-bottom:16px}
+.hero .big{font:600 32px/1.2 Georgia,serif;margin:4px 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+@media(max-width:700px){.cols{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+.stat{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:#fff;cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+.stat:hover{border-color:var(--acc)}
+.stat b{display:block;font:600 28px Georgia,serif;color:var(--acc)}
+.pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:13px;margin:3px 4px 3px 0}
+.pill.g{background:#d9f0ec;color:#0b5b54}
+.pill.r{background:#fde4e4;color:#8f1717}
+.welcome{background:var(--ink);color:#fff;border-radius:6px;padding:28px 24px;margin-bottom:16px}
+.welcome h2{color:#fff;font-size:26px;margin:0 0 8px}
+.welcome p{margin:0 0 14px;color:#c9d6de;max-width:640px}
+.welcome .btn{background:var(--acc2)}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin-bottom:6px}
+@media(prefers-reduced-motion:no-preference){.bar i{transition:width .5s}}
+@media print{header,nav,.row,.noprint{display:none!important}body{background:#fff}.card{border:0}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Specialization Selection – Decision Support System</h1>
+  <p>Weighted Sum Model · 3rd Year ISIL · Data is saved in your browser (localStorage)</p>
+</header>
+<nav id="nav"></nav>
+<main>
+
+<section id="home">
+  <div class="welcome">
+    <h2>Which specialization fits you best?</h2>
+    <p>Compare university specializations on several criteria and get a ranked recommendation based on a student's profile and preferences.</p>
+    <button class="btn" onclick="show('results')">See the results</button>
+  </div>
+
+  <div class="stats" id="homeStats"></div>
+
+  <div class="cols">
+    <div class="card"><h2>How it works</h2>
+      <ol class="steps">
+        <li>Add the <b>students</b> and the <b>specializations</b> to compare.</li>
+        <li>Define the <b>criteria</b>, their type (maximize or minimize) and their weights.</li>
+        <li>Enter the <b>evaluations</b>: a score from 1 to 10 for each specialization and criterion.</li>
+        <li>Open <b>Results</b> to see the scores, the ranking and the recommendation.</li>
+      </ol>
+      <p class="note">Each score is normalized, multiplied by the criterion weight, then summed (Weighted Sum Model). Ties are detected automatically.</p>
+    </div>
+    <div class="card"><h2>Current criteria</h2>
+      <div class="wrap"><table id="homeCrit"></table></div>
+      <p id="homeW" class="note"></p>
+    </div>
+  </div>
+
+  <div class="card"><h2>Latest recommendations</h2>
+    <div class="wrap"><table id="homeReco"></table></div>
+  </div>
+</section>
+
+<section id="students">
+  <div class="card"><h2>Students</h2>
+    <div class="row"><input id="stName" placeholder="Student name"><input id="stEmail" type="email" placeholder="Email">
+    <button class="btn" onclick="saveStudent()" id="stBtn">Add student</button></div>
+    <div class="wrap"><table id="stTable"></table></div>
+  </div>
+</section>
+
+<section id="specs">
+  <div class="card"><h2>Specializations (alternatives)</h2>
+    <div class="row"><input id="spCode" placeholder="Code (P5)" style="width:90px"><input id="spName" placeholder="Specialization name" style="flex:1;min-width:200px">
+    <button class="btn" onclick="saveSpec()" id="spBtn">Add specialization</button></div>
+    <div class="wrap"><table id="spTable"></table></div>
+  </div>
+</section>
+
+<section id="crit">
+  <div class="card"><h2>Criteria and weights</h2>
+    <div class="row"><input id="crName" placeholder="Criterion name" style="flex:1;min-width:200px">
+    <select id="crType"><option value="max">Maximize</option><option value="min">Minimize</option></select>
+    <input id="crW" type="number" step="0.01" min="0" max="1" placeholder="Weight">
+    <button class="btn" onclick="saveCrit()" id="crBtn">Add criterion</button></div>
+    <div class="wrap"><table id="crTable"></table></div>
+    <p id="wSum" class="note"></p>
+  </div>
+</section>
+
+<section id="evals">
+  <div class="card"><h2>Evaluations (scale 1 to 10)</h2>
+    <div class="row"><label for="evStudent">Student:</label><select id="evStudent" onchange="renderEvals()"></select></div>
+    <div class="wrap"><table id="evTable"></table></div>
+    <p class="note">For a "Minimize" criterion (e.g. Difficulty), a higher value means worse. Values are saved as you type.</p>
+  </div>
+</section>
+
+<section id="results">
+  <div class="card"><h2>Results and recommendation</h2>
+    <div class="row"><label for="rsStudent">Student:</label><select id="rsStudent" onchange="renderResults()"></select>
+    <button class="btn sec noprint" onclick="window.print()">Print / Save as PDF</button></div>
+    <div id="rsOut"></div>
+  </div>
+  <div class="card"><h2>Recommendation for every student</h2>
+    <div class="wrap"><table id="rsAll"></table></div>
+  </div>
+</section>
+
+</main>
+<script>
+// ---------- Data layer (simulates the relational DB: tables with ids) ----------
+const KEY='dss_spec_v1';
+const defaults=()=>({
+  seq:20,
+  students:[{id:1,name:'Student 1',email:''}],
+  specs:[{id:2,code:'P1',name:'Artificial Intelligence'},{id:3,code:'P2',name:'Cybersecurity'},{id:4,code:'P3',name:'Data Science'},{id:5,code:'P4',name:'Information Systems and Software Engineering'}],
+  crit:[{id:6,name:'Programming',type:'max',w:.20},{id:7,name:'Mathematics',type:'max',w:.15},{id:8,name:"Alignment with the student's competencies",type:'max',w:.20},{id:9,name:'Career opportunities',type:'max',w:.20},{id:10,name:'Difficulty',type:'min',w:.10},{id:11,name:'Personal interest',type:'max',w:.15}],
+  ev:{} // ev["studentId_specId_critId"] = value 1..10
+});
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY))||defaults()}catch(e){db=defaults()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let editing={st:null,sp:null,cr:null};
+
+// ---------- Navigation ----------
+const tabs=[['home','Accueil'],['students','Students'],['specs','Specializations'],['crit','Criteria'],['evals','Evaluations'],['results','Results']];
+document.getElementById('nav').innerHTML=tabs.map(t=>`<button data-t="${t[0]}" onclick="show('${t[0]}')">${t[1]}</button>`).join('');
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===id));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===id));
+  renderAll();window.scrollTo(0,0);
+}
+
+// ---------- Students ----------
+function saveStudent(){
+  const name=stName.value.trim(),email=stEmail.value.trim();
+  if(!name){alert('Please enter the student name.');return}
+  if(email&&db.students.some(s=>(s.email||'').toLowerCase()===email.toLowerCase()&&s.id!==editing.st)){alert('This email is already used.');return}
+  if(editing.st){const s=db.students.find(x=>x.id===editing.st);s.name=name;s.email=email;editing.st=null;stBtn.textContent='Add student'}
+  else db.students.push({id:++db.seq,name,email});
+  stName.value=stEmail.value='';save();renderAll();
+}
+function editStudent(id){const s=db.students.find(x=>x.id===id);stName.value=s.name;stEmail.value=s.email||'';editing.st=id;stBtn.textContent='Save changes'}
+function delStudent(id){if(!confirm('Delete this student and their evaluations?'))return;
+  db.students=db.students.filter(x=>x.id!==id);purgeEv(0,id);save();renderAll()}
+
+// ---------- Specializations ----------
+function saveSpec(){
+  const code=spCode.value.trim(),name=spName.value.trim();
+  if(!name){alert('Please enter the specialization name.');return}
+  if(editing.sp){const s=db.specs.find(x=>x.id===editing.sp);s.code=code;s.name=name;editing.sp=null;spBtn.textContent='Add specialization'}
+  else db.specs.push({id:++db.seq,code:code||'P'+(db.specs.length+1),name});
+  spCode.value=spName.value='';save();renderAll();
+}
+function editSpec(id){const s=db.specs.find(x=>x.id===id);spCode.value=s.code;spName.value=s.name;editing.sp=id;spBtn.textContent='Save changes'}
+function delSpec(id){if(!confirm('Delete this specialization and its evaluations?'))return;
+  db.specs=db.specs.filter(x=>x.id!==id);purgeEv(1,id);save();renderAll()}
+
+// ---------- Criteria ----------
+function saveCrit(){
+  const name=crName.value.trim(),w=parseFloat(crW.value);
+  if(!name||isNaN(w)||w<0||w>1){alert('Enter a name and a weight between 0 and 1.');return}
+  if(editing.cr){const c=db.crit.find(x=>x.id===editing.cr);c.name=name;c.type=crType.value;c.w=w;editing.cr=null;crBtn.textContent='Add criterion'}
+  else db.crit.push({id:++db.seq,name,type:crType.value,w});
+  crName.value=crW.value='';save();renderAll();
+}
+function editCrit(id){const c=db.crit.find(x=>x.id===id);crName.value=c.name;crType.value=c.type;crW.value=c.w;editing.cr=id;crBtn.textContent='Save changes'}
+function delCrit(id){if(!confirm('Delete this criterion and its evaluations?'))return;
+  db.crit=db.crit.filter(x=>x.id!==id);purgeEv(2,id);save();renderAll()}
+
+function purgeEv(pos,id){for(const k in db.ev){if(+k.split('_')[pos]===id)delete db.ev[k]}}
+
+// ---------- Rendering ----------
+function renderAll(){
+  stTable.innerHTML='<tr><th>Name</th><th>Email</th><th></th></tr>'+(db.students.map(s=>
+    `<tr><td>${esc(s.name)}</td><td>${esc(s.email||'')}</td><td><button class="btn edit" onclick="editStudent(${s.id})">Edit</button><button class="btn del" onclick="delStudent(${s.id})">Delete</button></td></tr>`).join('')||'<tr><td colspan=3 class="note">No students yet. Add one above.</td></tr>');
+  spTable.innerHTML='<tr><th>Code</th><th>Specialization</th><th></th></tr>'+db.specs.map(s=>
+    `<tr><td>${esc(s.code)}</td><td>${esc(s.name)}</td><td><button class="btn edit" onclick="editSpec(${s.id})">Edit</button><button class="btn del" onclick="delSpec(${s.id})">Delete</button></td></tr>`).join('');
+  crTable.innerHTML='<tr><th>Criterion</th><th>Type</th><th>Weight</th><th></th></tr>'+db.crit.map(c=>
+    `<tr><td>${esc(c.name)}</td><td>${c.type==='max'?'Maximize':'Minimize'}</td><td>${c.w.toFixed(2)}</td><td><button class="btn edit" onclick="editCrit(${c.id})">Edit</button><button class="btn del" onclick="delCrit(${c.id})">Delete</button></td></tr>`).join('');
+  const sum=db.crit.reduce((a,c)=>a+c.w,0);
+  wSum.innerHTML=Math.abs(sum-1)<1e-6?`Sum of weights: <b>${sum.toFixed(2)}</b> ✓`:`<span class="warn">Sum of weights: ${sum.toFixed(2)} (should be 1.00). Weights will be rescaled automatically in the calculation.</span>`;
+  fillStudentSelects();renderEvals();renderResults();renderHome();
+}
+function fillStudentSelects(){
+  for(const sel of [evStudent,rsStudent]){
+    const cur=sel.value;
+    sel.innerHTML=db.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+    if(db.students.some(s=>String(s.id)===cur))sel.value=cur;
+  }
+}
+const evKey=(s,p,c)=>`${s}_${p}_${c}`;
+function getEv(s,p,c){const v=db.ev[evKey(s,p,c)];return v===undefined?5:v}
+function renderEvals(){
+  const sid=+evStudent.value;
+  if(!sid){evTable.innerHTML='<tr><td class="note">Add a student first.</td></tr>';return}
+  let h='<tr><th>Specialization</th>'+db.crit.map(c=>`<th>${esc(c.name)}${c.type==='min'?' <span class="min">(min)</span>':''}</th>`).join('')+'</tr>';
+  for(const p of db.specs){
+    h+=`<tr><td><b>${esc(p.code)}</b> ${esc(p.name)}</td>`+db.crit.map(c=>
+      `<td><input type="number" min="1" max="10" step="1" value="${getEv(sid,p.id,c.id)}" aria-label="${esc(p.code)} ${esc(c.name)}" onchange="setEv(${sid},${p.id},${c.id},this)"></td>`).join('')+'</tr>';
+  }
+  evTable.innerHTML=h;
+}
+function setEv(s,p,c,el){
+  let v=parseFloat(el.value);
+  if(isNaN(v))v=5;v=Math.min(10,Math.max(1,v));el.value=v;
+  db.ev[evKey(s,p,c)]=v;save();
+}
+
+// ---------- Home (Accueil) ----------
+function renderHome(){
+  const filled=Object.keys(db.ev).length,expected=db.students.length*db.specs.length*db.crit.length;
+  const stat=(n,label,tab)=>`<button class="stat" onclick="show('${tab}')"><b>${n}</b>${label}</button>`;
+  homeStats.innerHTML=stat(db.students.length,'Students','students')+stat(db.specs.length,'Specializations','specs')+stat(db.crit.length,'Criteria','crit')+
+    stat(filled+' / '+expected,'Evaluations entered','evals');
+  homeCrit.innerHTML='<tr><th>Criterion</th><th>Type</th><th>Weight</th></tr>'+db.crit.map(c=>
+    `<tr><td>${esc(c.name)}</td><td>${c.type==='max'?'Maximize':'Minimize'}</td><td>${c.w.toFixed(2)}</td></tr>`).join('');
+  const sum=db.crit.reduce((a,c)=>a+c.w,0);
+  homeW.innerHTML=Math.abs(sum-1)<1e-6?`Sum of weights: <b>${sum.toFixed(2)}</b> ✓`:`<span class="warn">Sum of weights is ${sum.toFixed(2)}, not 1.00. Fix it in the Criteria page.</span>`;
+  homeReco.innerHTML=(db.students.length&&db.specs.length&&db.crit.length)?
+    '<tr><th>Student</th><th>Recommended specialization</th><th>Score</th></tr>'+db.students.map(s=>{
+      const t=computeWSM(s.id).filter(x=>x.rank===1);
+      return `<tr><td>${esc(s.name)}</td><td><b>${t.map(x=>esc(x.p.name)).join(' / ')}</b>${t.length>1?' <span class="min">(tie)</span>':''}</td><td>${(t[0].score*100).toFixed(2)}%</td></tr>`}).join(''):
+    '<tr><td class="note">Add students, specializations and criteria to see recommendations here.</td></tr>';
+}
+
+// ---------- Weighted Sum Model ----------
+// Normalization on the 1–10 scale:  maximize: (v-1)/9    minimize: (10-v)/9   → always in [0,1]
+function norm(v,type){return type==='max'?(v-1)/9:(10-v)/9}
+function computeWSM(sid){
+  const total=db.crit.reduce((a,c)=>a+c.w,0)||1;
+  const rows=db.specs.map(p=>{
+    let score=0;
+    const parts=db.crit.map(c=>{
+      const raw=getEv(sid,p.id,c.id),n=norm(raw,c.type),w=c.w/total;
+      score+=n*w;return{raw,n,w};
+    });
+    return{p,parts,score};
+  });
+  rows.sort((a,b)=>b.score-a.score);
+  rows.forEach((x,i)=>{ // ties share the same rank
+    if(i>0&&Math.abs(x.score-rows[i-1].score)<1e-9)x.rank=rows[i-1].rank;else x.rank=i+1;
+  });
+  return rows;
+}
+
+// ---------- Results + Recommendation ----------
+function renderResults(){
+  const sid=+rsStudent.value;
+  if(!sid||!db.specs.length||!db.crit.length){rsOut.innerHTML='<p class="note">Add at least one student, one specialization and one criterion.</p>';rsAll.innerHTML='';return}
+  const rows=computeWSM(sid),st=db.students.find(s=>s.id===sid);
+  const top=rows.filter(r=>r.rank===1),win=rows[0],run=rows.find(r=>r.rank>1);
+
+  const info=win.parts.map((x,i)=>({c:db.crit[i],n:x.n,raw:x.raw,gain:run?(x.n-run.parts[i].n)*x.w:0}));
+  const lbl=i=>`${esc(i.c.name)} (${i.raw}/10${i.c.type==='min'?', lower is better':''})`;
+  const strong=[...info].sort((a,b)=>b.n-a.n).slice(0,3);
+  const weak=[...info].filter(i=>i.n<0.6).sort((a,b)=>a.n-b.n).slice(0,3);
+  const adv=[...info].filter(i=>i.gain>0.0001).sort((a,b)=>b.gain-a.gain).slice(0,3);
+  const margin=run?(win.score-run.score)*100:null;
+  const level=margin===null?'':margin<2?'very close, so double-check against your own feeling':margin<8?'a clear preference':'a strong preference';
+
+  let h='';
+  if(top.length>1)
+    h+=`<div class="tie"><b>Tie detected:</b> ${top.map(r=>esc(r.p.code)+' – '+esc(r.p.name)).join(' and ')} share the highest score (${(win.score*100).toFixed(2)}%). The system cannot separate them, so use a tie-breaker such as personal interest.</div>`;
+
+  h+=`<div class="hero"><div class="note">Recommendation for ${esc(st.name)}${st.email?' ('+esc(st.email)+')':''}</div>
+      <div class="big">${top.map(r=>esc(r.p.name)).join(' / ')}</div>
+      <div style="font-size:18px">Overall score <b>${(win.score*100).toFixed(2)}%</b>${run?` · ahead of the next option by <b>${margin.toFixed(2)}</b> points (${level})`:''}</div></div>`;
+
+  h+='<div class="cols"><div><h3>Why this specialization</h3>'+
+    strong.map(i=>`<span class="pill g">${lbl(i)}</span>`).join('')+
+    (adv.length?`<p class="note">Compared with ${esc(run.p.name)}, it gains the most on: ${adv.map(i=>esc(i.c.name)).join(', ')}.</p>`:'')+
+    '</div><div><h3>Points to watch</h3>'+
+    (weak.length?weak.map(i=>`<span class="pill r">${lbl(i)}</span>`).join(''):'<p class="note">No weak criteria: every normalized score is above 60%.</p>')+
+    '</div></div>';
+
+  h+='<h2 style="margin-top:20px">Ranking</h2><div class="wrap"><table><tr><th>Rank</th><th>Specialization</th><th>Score</th><th>Gap to first</th><th style="width:34%">Chart</th></tr>'+
+    rows.map(r=>`<tr><td>${r.rank}</td><td><b>${esc(r.p.code)}</b> ${esc(r.p.name)}</td><td>${(r.score*100).toFixed(2)}%</td>
+      <td>${r.rank===1?'—':'−'+((win.score-r.score)*100).toFixed(2)}</td>
+      <td><div class="bar ${r.rank===1?'first':''}"><i style="width:${(r.score*100).toFixed(1)}%"></i></div></td></tr>`).join('')+'</table></div>';
+
+  h+='<h2 style="margin-top:20px">Calculation detail</h2><div class="wrap"><table><tr><th>Specialization</th>'+
+    db.crit.map(c=>`<th>${esc(c.name)}<br><span class="min">w=${c.w.toFixed(2)} · ${c.type}</span></th>`).join('')+'<th>Total</th></tr>'+
+    rows.map(r=>`<tr><td><b>${esc(r.p.code)}</b></td>`+r.parts.map(x=>`<td>${x.raw} → ${x.n.toFixed(3)}</td>`).join('')+`<td><b>${r.score.toFixed(4)}</b></td></tr>`).join('')+'</table></div>'+
+    '<p class="note">Cells show: raw value → normalized value. Score = Σ (weight × normalized value). Maximize: (v−1)/9 · Minimize: (10−v)/9. This is decision support: the final choice stays with the student.</p>';
+  rsOut.innerHTML=h;
+
+  rsAll.innerHTML='<tr><th>Student</th><th>Email</th><th>Recommended specialization</th><th>Score</th><th>Next best</th></tr>'+db.students.map(s=>{
+    const r=computeWSM(s.id),t=r.filter(x=>x.rank===1),n=r.find(x=>x.rank>1);
+    return `<tr><td>${esc(s.name)}</td><td>${esc(s.email||'')}</td><td><b>${t.map(x=>esc(x.p.name)).join(' / ')}</b>${t.length>1?' <span class="min">(tie)</span>':''}</td><td>${(t[0].score*100).toFixed(2)}%</td><td>${n?esc(n.p.name):'—'}</td></tr>`}).join('');
+}
+
+show('home');
+</script>
+</body>
+</html>
