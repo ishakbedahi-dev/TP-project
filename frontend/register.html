@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSS - Create Account</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="left-side">
+            <div class="logo">DSS</div>
+
+            <h1>Start Your<br>Journey.</h1>
+
+            <p>
+                Create your account and discover
+                the university specialization that matches
+                your skills, interests and ambitions.
+            </p>
+
+            <div class="footer-text">
+                Decision Support System © 2026
+            </div>
+        </div>
+
+        <div class="right-side">
+
+            <div class="login-box">
+
+                <h2>Create Account</h2>
+
+                <p class="subtitle">
+                    Fill in your information to get started.
+                </p>
+
+                <form id="registerForm">
+
+                    <label>Account Type</label>
+
+                    <select id="accountType" required>
+                        <option value="student">Student</option>
+                        <option value="admin">Admin</option>
+                    </select>
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                    <label>Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                    <label>Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Create a password"
+                        minlength="8"
+                        required
+                    >
+
+                    <label>Confirm Password</label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm your password"
+                        minlength="8"
+                        required
+                    >
+
+                    <button type="submit" class="login-btn">
+                        Create Account
+                    </button>
+
+                </form>
+
+                <p class="register-text">
+                    Already have an account?
+                    <a href="index.html">Login</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/register.js"></script>
+
+</body>
+</html>
