@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSS - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="left-side">
+            <div class="logo">DSS</div>
+
+            <h1>Find Your<br>Right Path.</h1>
+
+            <p>
+                A smarter way to discover the university
+                specialization that matches your skills,
+                interests and ambitions.
+            </p>
+
+            <div class="footer-text">
+                Decision Support System © 2026
+            </div>
+        </div>
+
+        <div class="right-side">
+
+            <div class="login-box">
+
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Choose your account type to continue.</p>
+
+                <div class="role-selection">
+
+                    <button class="role-btn active" id="studentBtn"
+                        onclick="selectRole('student')">
+                        <span>🎓</span>
+                        <strong>Student</strong>
+                        <small>Access your student account</small>
+                    </button>
+
+                    <button class="role-btn" id="adminBtn"
+                        onclick="selectRole('admin')">
+                        <span>🛡️</span>
+                        <strong>Admin</strong>
+                        <small>Manage the DSS platform</small>
+                    </button>
+
+                </div>
+
+                <form id="loginForm">
+
+                    <label>Email Address</label>
+                    <input type="email" id="email"
+                        placeholder="Enter your email" required>
+
+                    <label>Password</label>
+                    <input type="password" id="password"
+                        placeholder="Enter your password" required>
+
+                    <button type="submit" class="login-btn">
+                        Login
+                    </button>
+
+                </form>
+
+                <p class="register-text" id="registerText">
+                    Don't have an account?
+                    <a href="register.html">Create an account</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>
