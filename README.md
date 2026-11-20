@@ -130,8 +130,21 @@ The application uses a relational database to store and manage:
 - Evaluation scores
 
 The database supports the storage, retrieval, and management of the information required by the decision support system.
-
 ---
+## 🧩 Entity-Relationship Diagram (ERD)
+![Database Schema](schema.png)
+---
+## Relationships:
+
+A student has many evaluations (one per specialization and criterion).
+A specialization is evaluated on many criteria.
+A criterion is used in many evaluations.
+The RESULT table stores the final WSM score and rank of each specialization for each student.
+
+## 🧱 UML Use Case Diagram:
+UML Use Case Diagram
+
+![UML Use Case Diagram](uml-use-case.svg)
 
 ## 🚀 Installation and Setup
 
@@ -155,7 +168,6 @@ git clone YOUR_REPOSITORY_URL
 Place the project folder inside the XAMPP `htdocs` directory.
 
 Example:
-
 ```text
 C:\xampp\htdocs\DSS
 ```
@@ -205,3 +217,7 @@ Developed as part of the Final Practical Project for the Decision Support System
 ## 📄 License
 
 This project was developed for academic and educational purposes.
+
+
+[def]: schema.png
+[def2]: schema.png
